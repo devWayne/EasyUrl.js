@@ -62,3 +62,7 @@ npm-debug.log
 
 *.cache
 *.mpc
+
+.DS_Store
+*.swo
+*.swp
