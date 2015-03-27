@@ -1,2 +1,2 @@
-httputil.js
+EasyUrl
 ===========
