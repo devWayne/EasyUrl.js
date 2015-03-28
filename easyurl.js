@@ -1,17 +1,22 @@
 var PARAMS_REGEX = /[^&?]*=[^&?]*/g;
 
 
-function url(link) {
+function URL(link) {
     this.url = link || location.href;
+    this.search = location.search ||'';
+    this.hash=location.hash|'';
+    this.origin=location.protocol|'';
+    this.host= location.host|'';
+    location.origin? this.origin=location.origin:this.origin = location.protocol + "//" + location.host;
+    return this;
 }
 
-url.prototype.createParams = function(data) {
+URL.prototype.createParams = function(data) {
     if (Object.keys(this.readParams()).length > 0) return {};
     return this.url + '?' + obj2arr(data).join('&');
 }
 
-
-url.prototype.readParams = function(opt) {
+URL.prototype.readParams = function(opt) {
     opt = opt || {
         type: 'Object'
     };
@@ -21,7 +26,7 @@ url.prototype.readParams = function(opt) {
     return arr2obj(paramsArray);
 }
 
-url.prototype.updateParams = function(opt) {
+URL.prototype.updateParams = function(opt) {
     opt = extend(opt, {
         override: true,
         data: {}
@@ -30,13 +35,18 @@ url.prototype.updateParams = function(opt) {
     paramsObject = extend(paramsObject, opt.data, opt.override);
     return this.url.split('?')[0] + '?' + obj2arr(paramsObject).join('&');
 }
-url.prototype.deleteParams = function(data) {
+URL.prototype.deleteParams = function(data) {
     data=data||{};
     var paramsObject  = this.readParams();   
     Object.keys(paramsObject).forEach(function(v,idx){
     	if(data.hasOwnProperty(v))delete paramsObject[v];
     });
     return Object.keys(paramsObject).length==0?this.url.split('?')[0]:this.url.split('?')[0] + '?' + obj2arr(paramsObject).join('&');
+}
+
+URL.prototype.hash=function(data){
+    if(data) return location.href=data;
+    return this.hash?this.hash.split('#')[1]:'';
 }
 
 function obj2arr(obj) {
@@ -65,3 +75,5 @@ function extend(dist, origin, override) {
     })
     return dist
 }
+
+module.exports=URL;
