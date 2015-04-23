@@ -76,4 +76,8 @@ function extend(dist, origin, override) {
     return dist
 }
 
-module.exports=URL;
+if (typeof module !== 'undefined') {
+  module.exports=URL;
+} else {
+  window.URL = URL;
+}
